@@ -730,7 +730,6 @@ class IpToMysql(object):
                                          "%(areacode)s,%(continent)s)"
                             insert_sql = insert_sql.format(table=self.table)
                             cursor.execute(insert_sql, data)
-                            conn.commit()
                         if version == BUSINESS_VERSION:
                             insert_sql = "INSERT INTO `{table}` " \
                                          "(`ip`, `type`, `b_risk_tag`, `b_risk_score`, `b_level`,`country`, `province`, `city`, " \
@@ -740,14 +739,12 @@ class IpToMysql(object):
                                          "%(areacode)s,%(continent)s)"
                             insert_sql = insert_sql.format(table=self.table)
                             cursor.execute(insert_sql, data)
-                            conn.commit()
                     else:
                         if version == PERIMETER_VERSION:
                             update_sql = "UPDATE `{table}` set `p_risk_tag` =%(p_risk_tag)s,`p_risk_score` =%(p_risk_score)s," \
                                          "`p_level`=%(p_level)s where ip=%(ip)s"
                             update_sql = update_sql.format(table=self.table)
                             cursor.execute(update_sql, data)
-                            conn.commit()
                         if version == BUSINESS_VERSION:
                             result = cursor.fetchone()
                             result = list(result)
@@ -769,8 +766,7 @@ class IpToMysql(object):
                                          "`b_level`=%(b_level)s where ip=%(ip)s"
                             update_sql = update_sql.format(table=self.table)
                             cursor.execute(update_sql, data)
-                            conn.commit()
-
+            conn.commit()
             conn.close()
             return 1
         except:
